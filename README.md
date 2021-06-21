@@ -13,3 +13,17 @@ const resp = await arach.isImageSafe(file, "test.png", "image/png")
      rawResponse: Object[]
      errored: boolean
 */
+```
+## Error handling:
+```ts
+arach.onError((err: string) => {
+    //do something
+})
+```
+
+## Using streams:
+
+```ts
+const buffer = await arach.convertStreamToBuffer(myStream)
+const resp = await arach.isImageSafe(buffer, "test.png", "image/png")
+```
