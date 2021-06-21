@@ -1,0 +1,25 @@
+{
+  "name": "arach-node",
+  "version": "1.0.0",
+  "description": "node.js wrapper for the Arachnid CSAM filter",
+  "main": "dist/arachnid.js",
+  "author": "Iodineimg",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "form-data": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/form-data": "^2.5.0",
+    "@types/node": "^15.12.4",
+    "tsc": "^2.0.3",
+    "typescript": "^4.3.4"
+  },
+  "scripts": {
+    "build": "tsc --build --verbose",
+    "test": "node dist/test.js"
+  },
+  "declaration": true,
+  "types": "dist/arach.d.ts",
+  "prepublish": "tsc"
+}
