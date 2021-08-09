@@ -20,6 +20,6 @@
     "test": "node dist/test.js"
   },
   "declaration": true,
-  "types": "dist/arach.d.ts",
+  "types": "dist/arachnid.d.ts",
   "prepublish": "tsc"
 }
