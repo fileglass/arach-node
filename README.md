@@ -1,5 +1,5 @@
 # arach-node
-A modern, promise based nodejs wrapper around the Project Arachnid CSAM API
+A modern, promise based Node.js wrapper around the [Project Arachnid CSAM API](https://projectarachnid.ca/en/#shield).
 
 Typescript example:
 ```ts
