@@ -14,7 +14,7 @@ const resp = await arach.isImageSafe(file, "test.png", "image/png")
      errored: boolean
 */
 ```
-Generics: The `isImageSafe` has 2 generics (type arguments), both to manage the type safety. <br>
+Generics: The `isImageSafe` method has 2 generics (type arguments), both to manage the type safety. <br>
 Usage: <br>
 `await arach.isImageSafe<true, true>(file, "test.png", "image/png")` <br>
 The example above turns off the strict typings of both string arguments, so any string format can be passed (normally `${string}.${string}` and `${string}/${string}` is allowed)
