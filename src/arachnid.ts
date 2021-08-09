@@ -29,7 +29,7 @@ export default class Filter {
         this.trueOnError = trueOnError
     }
 
-    public async isImageSafe<UnsafeExt = false, UnsafeMime = false>(imgData: Buffer, fileName: Unsafe<UnsafeExt, ImageNameWithExtension, string>, mimeType:  Unsafe<UnsafeMime, ImageNameWithExtension, string>): Promise<ArachnidResolvable> {
+    public async isImageSafe<UnsafeExt = false, UnsafeMime = false>(imgData: Buffer, fileName: Unsafe<UnsafeExt, ImageNameWithExtension, string>, mimeType:  Unsafe<UnsafeMime, MimeType, string>): Promise<ArachnidResolvable> {
         return new Promise<ArachnidResolvable>((resolve, reject) => {
             const fd = new FormData();
             fd.append("image", imgData, {
