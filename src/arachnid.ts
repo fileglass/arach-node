@@ -11,6 +11,11 @@ export interface ArachnidResolvable {
 }
 
 
+export type Unsafe<Unsafe, Default, Fallback> = Unsafe extends true ? Fallback | Default : Default
+
+export type ImageNameWithExtension = `${string}.${string}`
+
+export type MimeType = `${string}/${string}`
 
 
 export default class Filter {
@@ -24,7 +29,7 @@ export default class Filter {
         this.trueOnError = trueOnError
     }
 
-    public async isImageSafe(imgData: Buffer, fileName: `${string}.${string}`, mimeType: `${string}/${string}`): Promise<ArachnidResolvable> {
+    public async isImageSafe<UnsafeExt = false, UnsafeMime = false>(imgData: Buffer, fileName: Unsafe<UnsafeExt, ImageNameWithExtension, string>, mimeType:  Unsafe<UnsafeMime, ImageNameWithExtension, string>): Promise<ArachnidResolvable> {
         return new Promise<ArachnidResolvable>((resolve, reject) => {
             const fd = new FormData();
             fd.append("image", imgData, {
