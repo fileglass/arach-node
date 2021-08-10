@@ -3,7 +3,7 @@
   "version": "1.0.6",
   "description": "node.js wrapper for the Arachnid CSAM filter",
   "main": "dist/arachnid.js",
-  "author": "Iodineimg",
+  "author": "Fileglass",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.21.1",
