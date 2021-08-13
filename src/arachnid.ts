@@ -4,9 +4,17 @@ import {Readable} from "stream"
 
 export type ErrorHandlerFn = (errMsg: string) => void
 
+
+export interface ArachnidMatch {
+    classification: string
+    distance: number
+    sha1: string
+    type: string
+}
+
 export interface ArachnidResolvable {
     safe: boolean
-    rawResponse: Object[] //TODO! type this properly
+    rawResponse: ArachnidMatch[]
     errored: boolean
 }
 
@@ -38,7 +46,7 @@ export default class Filter {
                 filename: fileName,
             });
             axios
-                .post<Object[]>(this.url, fd, {
+                .post<ArachnidMatch[]>(this.url, fd, {
                     headers: {
                         Authorization: this.apiKey,
                         "Content-Length": fd.getLengthSync(),
