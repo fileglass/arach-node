@@ -4,7 +4,7 @@ A modern, promise based Node.js wrapper around the [Project Arachnid CSAM API](h
 Typescript example:
 ```ts
 import Filter from "arach-node"
-const arach = new Filter("apikey", "url", true)
+const arach = new Filter("apikey", "url", true /* set to false if you want to get "false" back on a request error*/)
 const file = someBuffer()
 const resp = await arach.isImageSafe(file, "test.png", "image/png")
 //resp = 
