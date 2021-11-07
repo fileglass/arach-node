@@ -2,7 +2,7 @@ import axios, {AxiosError} from "axios"
 import FormData from "form-data";
 import {Readable} from "stream"
 
-export type ErrorHandlerFn = (errMsg: string) => void
+export type ErrorHandlerFn = (errMsg: string, rawErr: any) => void
 
 
 export interface ArachnidMatch {
@@ -25,48 +25,70 @@ export type ImageNameWithExtension = `${string}.${string}`
 
 export type MimeType = `${string}/${string}`
 
+export interface ArachnidConfig {
+	apikey: string,
+	url: string
+	trueOnError?: boolean
+	exitOnErr?: boolean
+}
 
 export default class Filter {
-    private readonly url: string
-    private readonly apiKey: string
-    private readonly trueOnError: boolean
     private errHandlerRef: ErrorHandlerFn
-    constructor(apiKey: string, url: string, trueOnError = true) {
-        this.url = url
-        this.apiKey = apiKey
-        this.trueOnError = trueOnError
-    }
+		private readonly apiKey: string;
+		private readonly url: string;
+		private readonly trueOnError: boolean
+		private readonly exitOnErr: boolean
+    constructor(config: ArachnidConfig) {
+			this.apiKey = config.apikey
+			this.url = config.url
+			this.trueOnError = config.trueOnError || true
+			this.exitOnErr = config.exitOnErr || false
+		}
 
-    public async isImageSafe<UnsafeExt = false, UnsafeMime = false>(imgData: Buffer, fileName: Unsafe<UnsafeExt, ImageNameWithExtension, string>, mimeType:  Unsafe<UnsafeMime, MimeType, string>): Promise<ArachnidResolvable> {
-        return new Promise<ArachnidResolvable>((resolve, reject) => {
-            const fd = new FormData();
-            fd.append("image", imgData, {
-                knownLength: imgData.length,
-                contentType: mimeType,
-                filename: fileName,
-            });
-            axios
-                .post<ArachnidMatch[]>(this.url, fd, {
-                    headers: {
-                        Authorization: this.apiKey,
-                        "Content-Length": fd.getLengthSync(),
-                        ...fd.getHeaders(),
-                    },
-                }).then(({data}) => {
-                if (data.length === 0) {
-                    resolve({safe: true, rawResponse: data, errored: false})
-                } else {
-                    resolve({safe: false, rawResponse: data, errored: false})
-                }
-            }).catch(err => {
-                if (this.trueOnError) {
-                    resolve({safe: true, rawResponse: [], errored: true})
-                } else {
-                    this.errHandlerRef ? this.errHandlerRef(err.response.data.error) : (() => {})()
-                    reject({safe: false, rawResponse: [], errored: true})
-                }
-            })
-        })
+		private dispatchErr(err: any) {
+			this.errHandlerRef ? this.errHandlerRef(err?.response?.data?.error || "", err) : (() => {})()
+			if (this.exitOnErr) {
+				throw err
+			}
+		}
+
+    public async isImageSafe<UnsafeExt = false, UnsafeMime = false>(imgData: Buffer | Readable, fileName: Unsafe<UnsafeExt, ImageNameWithExtension, string>, mimeType:  Unsafe<UnsafeMime, MimeType, string>): Promise<ArachnidResolvable> {
+			const fd = new FormData();
+			if (imgData instanceof Buffer) {
+				fd.append("image", imgData, {
+					knownLength: imgData.length,
+					contentType: mimeType,
+					filename: fileName,
+				});
+			} else {
+				fd.append("image", imgData, {
+					contentType: mimeType,
+					filename: fileName,
+				})
+			}
+			try {
+				const {data}  = await axios
+					.post<ArachnidMatch[]>(this.url, fd, {
+						headers: {
+							Authorization: this.apiKey,
+							...fd.getHeaders(),
+						},
+					})
+				if (data.length === 0) {
+					return {safe: true, rawResponse: data, errored: false}
+				} else {
+					return {safe: false, rawResponse: data, errored: false}
+				}
+			} catch (err) {
+				if (this.trueOnError) {
+					this.dispatchErr(err);
+					return {safe: true, rawResponse: [], errored: true}
+				} else {
+					this.dispatchErr(err);
+					return {safe: false, rawResponse: [], errored: true}
+				}
+			}
+
 
         }
 
