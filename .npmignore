@@ -1,8 +1,8 @@
 /.idea
-/node_modules
-dist/test.js
-dist/test.d.ts
-src
+/dist/test.js
+/dist/test.d.ts
+/dist/test.js.map
+/src
 defPfp.png
 LICENSE
 README.md
