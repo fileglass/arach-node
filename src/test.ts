@@ -4,9 +4,6 @@ import {config} from "dotenv";
 
 config()
 const arach = new Filter({apikey: process.env.ARACH_KEY! + "sex", url: process.env.ARACH_URL!})
-
-
-
     async function check() {
     arach.onError((err, raw) => {
         console.log("Error: ", err)

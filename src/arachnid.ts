@@ -101,7 +101,8 @@ export default class Filter {
     }
 
     /**
-     * Convert readable streams to buffers that the method accepts
+     * `isImageSafe` supports Readable streams since version 2.0.
+		 * 	@deprecated
      */
     public async convertStreamToBuffer(readable: Readable): Promise<Buffer> {
         const chunks: Uint8Array[] = []
