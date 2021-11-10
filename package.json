@@ -1,6 +1,6 @@
 {
   "name": "@fileglass/arach-node",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "node.js wrapper for the Arachnid CSAM filter",
   "main": "dist/arachnid.js",
   "author": "Fileglass",

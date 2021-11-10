@@ -1,6 +1,7 @@
 import axios, {AxiosError} from "axios"
 import FormData from "form-data";
 import {Readable} from "stream"
+import ReadableStream = NodeJS.ReadableStream;
 
 export type ErrorHandlerFn = (errMsg: string, rawErr: any) => void
 
@@ -52,7 +53,7 @@ export default class Filter {
 			}
 		}
 
-    public async isImageSafe<UnsafeExt = false, UnsafeMime = false>(imgData: Buffer | Readable, fileName: Unsafe<UnsafeExt, ImageNameWithExtension, string>, mimeType:  Unsafe<UnsafeMime, MimeType, string>): Promise<ArachnidResolvable> {
+    public async isImageSafe<UnsafeExt = false, UnsafeMime = false>(imgData: Buffer | Readable | ReadableStream, fileName: Unsafe<UnsafeExt, ImageNameWithExtension, string>, mimeType:  Unsafe<UnsafeMime, MimeType, string>): Promise<ArachnidResolvable> {
 			const fd = new FormData();
 			if (imgData instanceof Buffer) {
 				fd.append("image", imgData, {
