@@ -53,18 +53,18 @@ export default class Filter {
 			}
 		}
 
-    public async isImageSafe<UnsafeExt = false, UnsafeMime = false>(imgData: Buffer | Readable | ReadableStream, fileName: Unsafe<UnsafeExt, ImageNameWithExtension, string>, mimeType:  Unsafe<UnsafeMime, MimeType, string>): Promise<ArachnidResolvable> {
+    public async isImageSafe<UnsafeExt = false, UnsafeMime = false>(imgData: Buffer | Readable | ReadableStream, filename: Unsafe<UnsafeExt, ImageNameWithExtension, string>, mimeType:  Unsafe<UnsafeMime, MimeType, string>): Promise<ArachnidResolvable> {
 			const fd = new FormData();
 			if (imgData instanceof Buffer) {
 				fd.append("image", imgData, {
 					knownLength: imgData.length,
 					contentType: mimeType,
-					filename: fileName,
+					filename,
 				});
 			} else {
 				fd.append("image", imgData, {
 					contentType: mimeType,
-					filename: fileName,
+					filename,
 				})
 			}
 			try {
@@ -75,19 +75,10 @@ export default class Filter {
 							...fd.getHeaders(),
 						},
 					})
-				if (data.length === 0) {
-					return {safe: true, rawResponse: data, errored: false}
-				} else {
-					return {safe: false, rawResponse: data, errored: false}
-				}
+				return {safe: data.length === 0, rawResponse: data, errored: false}
 			} catch (err) {
-				if (this.trueOnError) {
-					this.dispatchErr(err);
-					return {safe: true, rawResponse: [], errored: true}
-				} else {
-					this.dispatchErr(err);
-					return {safe: false, rawResponse: [], errored: true}
-				}
+				this.dispatchErr(err);
+				return {safe: this.trueOnError, rawResponse: [], errored: true}
 			}
 
 
